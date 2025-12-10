@@ -22,7 +22,7 @@ for line in csvfile:lines() do
 	split1=string.find(line,",")
 	split2=string.find(line,",",split1+1)
 	split3=string.find(line,",",split2+1)
-	local bookname=string.sub(line,split1+1,split1-1)
+	local bookname=string.sub(line,0,split1-1)
 	local bookauthor = string.sub(line,split1+1,split2-1)
 	local bookdate=string.sub(line,split2+1,split3)
 	bookshelf:create(bookname,bookauthor,bookdate)
@@ -39,7 +39,7 @@ end
 function bookshelf:find(property, value)
 	for index,book in pairs(self) do
 		if string.match(book[property], value)~=nil then
-			return book.title," written by ",book.author," released in ",book.year
+			return book.title,", written by ",book.author,", released in ",book.year
 		end
 	end
 end
@@ -68,7 +68,7 @@ function ui()
 	elseif input == "U" then
 		for i,books in pairs(bookshelf) do
 			if type(books) == "table" then
-				io.write(i," ",books.title," ",books.author," ",books.year,"\n")
+				io.write(i," ",books.title," by ",books.author," (",books.year,")\n")
 			end
 		end
 		io.write("\nEnter the number of the book you want to update: ")
