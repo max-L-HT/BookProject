@@ -1,5 +1,7 @@
 Book = {title = "",author = "", year = "", checked_out = false}
 bookshelf = {}
+local csvfile = io.open("table.csv","r")
+
 
 function Book:new(title,author,year)
 	book= {}
@@ -16,8 +18,15 @@ function bookshelf:create(title,author,year)
 	table.insert(bookshelf,temp)
 	return temp
 end
-
-bookshelf:create("Animal Liberation","Peter Singer","1975")
+for line in csvfile:lines() do
+	split1=string.find(line,",")
+	split2=string.find(line,",",split1+1)
+	split3=string.find(line,",",split2+1)
+	local bookname=string.sub(line,split1+1,split1-1)
+	local bookauthor = string.sub(line,split1+1,split2-1)
+	local bookdate=string.sub(line,split2+1,split3)
+	bookshelf:create(bookname,bookauthor,bookdate)
+end
 
 function bookshelf:read(index)
 	found_book = bookshelf[index]
@@ -59,7 +68,7 @@ function ui()
 	elseif input == "U" then
 		for i,books in pairs(bookshelf) do
 			if type(books) == "table" then
-				io.write(i," ",books.title," ",books.author," ",books.year)
+				io.write(i," ",books.title," ",books.author," ",books.year,"\n")
 			end
 		end
 		io.write("\nEnter the number of the book you want to update: ")
